@@ -8,7 +8,7 @@ import os
 
 game_name = "The Elder Scrolls IV: Oblivion Remastered" 
 game_id = 2623190
-target_price = 20000
+target_price = 40
 sender_email = os.environ["EMAIL_USER"]
 sender_pass = os.environ["EMAIL_PASS"]
 receiver_email = os.environ["EMAIL_USER"]
@@ -57,7 +57,7 @@ if response.status_code == 200:
     if game_price:
         game_price_str = game_price.get_text(strip=True)
         price_clean = re.sub(r"[^\d]", "", game_price_str)
-        price_value = int(price_clean)
+        price_value = int(price_clean) / 100
         print(f"{game_name} price is: {price_value}")
 
         if price_value <= target_price:            
