@@ -1,0 +1,30 @@
+name: Steam Scraper Daily (Windows)
+
+on:
+  schedule:
+    - cron: '0 17 * * *'  # Every day at 11:00 AM Costa Rica time
+  workflow_dispatch:       # Manual execution enabled
+
+jobs:
+  run-scraper:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13.5'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run the scraper
+      env:
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}       
+      run: python Web_scraping_Steam.py
