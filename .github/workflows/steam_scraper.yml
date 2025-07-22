@@ -2,7 +2,7 @@ name: Steam Scraper Daily (Windows)
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # Every day at 11:00 AM Costa Rica time (17 UTC)
+    - cron: '0 18 * * *'  # Every day at 11:00 AM Costa Rica time (18 UTC)
   workflow_dispatch:       # Manual execution enabled
 
 jobs:
