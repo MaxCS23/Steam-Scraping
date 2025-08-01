@@ -7,9 +7,6 @@ import re
 from email.mime.text import MIMEText
 import os
 
-game_name = "The Elder Scrolls IV: Oblivion Remastered" 
-game_id = 2623190
-target_price = 40
 sender_email = os.environ["EMAIL_USER"]
 sender_pass = os.environ["EMAIL_PASS"]
 receiver_email = os.environ["EMAIL_USER"]
@@ -87,7 +84,7 @@ def get_game_price(game):
         price_value = parse_price(price_text)
 
     
-    if price_value <= target_price:                 
+    if price_value <= game_target_price:                 
         send_email_notification(sender_email=sender_email, receiver_email=receiver_email, game_name=game_name, target_price=game_target_price, actual_price=price_value, discount=True)
     else:
         send_email_notification(sender_email=sender_email, receiver_email=receiver_email, game_name=game_name, target_price=game_target_price, actual_price=price_value, discount=False)
