@@ -79,7 +79,7 @@ def get_game_price(game):
         return None
     
     soup = BeautifulSoup(response.text, "html.parser")
-    game_price = soup.find("div", class_="game_purchase_price price") or soup.find("div", class_="discount_final_price")
+    game_price = soup.find("div", class_="discount_final_price") or soup.find("div", class_="game_purchase_price price")
     print(f"[DEBUG] {game_name} - raw price tag: '{game_price}'")
 
     if game_price:
