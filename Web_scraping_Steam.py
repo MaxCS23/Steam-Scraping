@@ -28,7 +28,7 @@ def send_email_notification(sender_email: str, receiver_email: str, game_name: s
     msg["From"] = sender_email
     msg["To"] = receiver_email
 
-    logging.info(f"Sending email to {receiver_email}")
+    logging.info(f"Sending email notification")
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(sender_email, sender_pass)
         server.send_message(msg)
@@ -47,6 +47,25 @@ def parse_price(price_text: str) -> float:
         except ValueError:
             return -1
 
+def build_session() -> requests.Session:
+    session = requests.Session()
+    session.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/115.0.0.0 Safari/537.36" 
+    })
+
+    session.cookies.set("Steam_Language", "english", domain=".steampowered.com")
+    session.cookies.set("birthtime", "568022401", domain=".steampowered.com")
+    session.cookies.set("lastagecheckage", "1-January-1990", domain=".steampowered.com")
+    session.cookies.set("wants_currency", "1", domain=".steampowered.com")
+    return session
+
+def perform_age_check(session: requests.Session, age_url: str):
+    session.post(age_url, data={
+    "ageDay": "1",
+    "ageMonth": "January",
+    "ageYear": "1990"
+    })
+
 def get_game_price(game):
     try:
         game_id = game["id"]
@@ -57,21 +76,9 @@ def get_game_price(game):
         
         logging.info(f"Checking price for: {game_name}")
 
-        session = requests.Session()
-        session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/115.0.0.0 Safari/537.36" 
-        })
+        session = build_session()
 
-        session.post(game_agecheck_url, data={
-            "ageDay": "1",
-            "ageMonth": "January",
-            "ageYear": "1990"
-        })
-
-        session.cookies.set("Steam_Language", "english", domain=".steampowered.com")
-        session.cookies.set("birthtime", "568022401", domain=".steampowered.com")
-        session.cookies.set("lastagecheckage", "1-January-1990", domain=".steampowered.com")
-        session.cookies.set("wants_currency", "1", domain=".steampowered.com")
+        perform_age_check(session, game_agecheck_url)
 
         response = session.get(game_url)
 
